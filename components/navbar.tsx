@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 
 export function Navbar() {
   return (
@@ -8,10 +9,10 @@ export function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
             <div className="flex items-center">
-            <a href="/" className="text-2xl font-bold text-green-600 flex items-center">
+            <Link href="/" className="text-2xl font-bold text-green-600 flex items-center">
               <img src="/logo.png" alt="HouseHunt Logo" className="h-8 w-8 mr-2" />
               HouseHunt
-            </a>
+            </Link>
             </div>
 
           {/* Navigation Links */}
