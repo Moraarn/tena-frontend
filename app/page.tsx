@@ -6,34 +6,69 @@ import {
   CardDescription,
   CardTitle,
 } from "@/components/ui/card";
-import { Navbar } from "@/components/navbar"; // Import Navbar component
-import { Footer } from "@/components/footer"; // Import Footer component
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 
-export default function LandingPage() {
+interface Apartment {
+  _id: string;
+  title: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  isVerified: boolean;
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
+  units: {
+    type: string;
+    bedrooms: number;
+    bathrooms: number;
+    squareFootage: number;
+    rent: number;
+    isAvailable: boolean;
+    images: string[];
+    _id: string;
+  }[];
+  images: string[];
+}
+
+export default async function LandingPage() {
+  const res = await fetch("http://3.23.95.191:7000/apartments", {
+    cache: "no-store", // Prevent caching for fresh data
+  });
+
+  if (!res.ok) {
+    console.error("Failed to fetch apartments");
+    return <div>Error loading apartments</div>;
+  }
+
+  const data = await res.json();
+  const apartments: Apartment[] = data.data.items;
+
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen">
       {/* Navbar */}
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative bg-cover bg-center bg-[url('/hero-image.jpg')] h-[80vh] flex items-center justify-center">
-        <div className="bg-black bg-opacity-50 text-white text-center p-6 rounded-lg max-w-lg">
-          <h1 className="text-4xl font-bold mb-4">
+      <section className="relative bg-cover bg-center h-screen bg-[url('https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')] flex items-center justify-center">
+        <div className="text-center p-6 rounded-lg max-w-3xl ">
+          <h1 className="text-5xl text-white font-bold mb-4">
             Find Your Dream Home, Effortlessly
           </h1>
-          <p className="text-lg mb-6">
+
+          <p className="text-xl text-white font-light mb-6">
             Explore thousands of listings, compare prices, and find the perfect
             home in your dream neighborhood.
           </p>
-          <div className="flex gap-2">
+          <div className="flex gap-2 max-w-lg mx-auto">
             <Input
-              placeholder="Enter location"
-              className="bg-white text-black"
+              placeholder="Search by Address, City or Zip"
+              className="flex-1 h-12 bg-background"
             />
-            <Button
-              variant="default"
-              className="bg-green-600 hover:bg-green-700"
-            >
+            <Button variant="default" className="h-12">
               Search
             </Button>
           </div>
@@ -46,23 +81,22 @@ export default function LandingPage() {
           Explore Popular Listings
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[1, 2, 3, 4, 5, 6].map((item) => (
+          {apartments.map((apartment) => (
             <Card
-              key={item}
+              key={apartment._id}
               className="hover:shadow-lg transition-shadow duration-300"
             >
               <img
-                src={`/house-${item}.jpg`}
-                alt={`House ${item}`}
+                src={apartment.images[0] || "/placeholder.jpg"}
+                alt={apartment.title}
                 className="w-full h-48 object-cover rounded-t-lg"
               />
               <CardContent>
-                <CardTitle>Beautiful Family Home</CardTitle>
-                <CardDescription>$350,000 • 3 Beds • 2 Baths</CardDescription>
-                <Button
-                  variant="default"
-                  className="mt-4 bg-green-600 hover:bg-green-700"
-                >
+                <CardTitle>{apartment.title}</CardTitle>
+                <CardDescription>
+                  {apartment.address}, {apartment.city}, {apartment.state}
+                </CardDescription>
+                <Button variant="default" className="mt-4 ">
                   View Details
                 </Button>
               </CardContent>
@@ -72,7 +106,7 @@ export default function LandingPage() {
       </section>
 
       {/* How It Works */}
-      <section className="bg-gray-100 py-16 px-8">
+      <section className=" py-16 px-8">
         <h2 className="text-3xl font-bold text-center mb-8">How It Works</h2>
         <div className="flex flex-col md:flex-row justify-center items-center gap-12">
           {[
@@ -93,31 +127,27 @@ export default function LandingPage() {
             },
           ].map(({ step, title, description }) => (
             <div key={step} className="text-center">
-              <div className="text-4xl font-bold text-green-600">{step}</div>
+              <div className="text-4xl font-bold text-primary-600">{step}</div>
               <h3 className="text-xl font-semibold mt-4">{title}</h3>
-              <p className="text-gray-700 mt-2">{description}</p>
+              <p className=" mt-2">{description}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Call to Action */}
-      <section className="bg-green-600 text-white py-16 text-center">
+      <section className="py-16 text-center">
         <h2 className="text-3xl font-bold mb-4">
           Ready to Find Your Perfect Home?
         </h2>
         <p className="text-lg mb-6">Start your journey today with HouseHunt!</p>
-        <Button
-          variant="default"
-          className="bg-white text-green-600 hover:bg-gray-100"
-        >
+        <Button variant="default" className="">
           Start Searching
         </Button>
       </section>
 
       {/* Footer */}
-      
-      <Footer/>
+      <Footer />
     </main>
   );
 }
