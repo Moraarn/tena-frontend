@@ -19,9 +19,9 @@ export function Navbar() {
               className="text-2xl font-bold text-primary flex items-center"
             >
               <img
-                src="/logo.png"
+                src="/logo.svg"
                 alt="HouseHunt Logo"
-                className="h-8 w-8 mr-2"
+                className="h-6 w-6 mr-2"
               />
               HouseHunt
             </Link>
